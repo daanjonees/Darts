@@ -1,6 +1,9 @@
 print('Welcome to Daniels dart game!')
-Total = 501
-print('What score did you get?')
-Score = int(input())
-Remaining = Total - Score 
-print(str(Remaining) + ' Remaining')
+
+remaining = 501
+while remaining > 0:
+    print('What score did you get?')
+    score = int(input())
+    remaining = remaining - score 
+    print(str(remaining) + ' Remaining')
+print('You have chekced out!')
