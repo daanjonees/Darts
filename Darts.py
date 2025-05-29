@@ -6,7 +6,7 @@ while 1:
         score = int(input())
         remaining = remaining - score 
         print(str(remaining) + ' Remaining')
-    print('You have checked out! Do you want to play again?')
+    print('You have checked out! If you want to play again please input "y".')
     keep_going = input()
     if keep_going != "y":
         break
