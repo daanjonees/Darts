@@ -1,8 +1,8 @@
 def can_checkout(rem):
-    return bool((2 <= rem <= 170 and rem not in (169, 168, 166, 165, 163, 162, 159)))
+    return bool((rem <= 170 and rem not in (169, 168, 166, 165, 163, 162, 159, 1)) or rem > 180)
 
 def scoring_input(scr):
-    return bool(scr <= 180 )
+    return bool(0 <= scr <= 180)
 
 keep_going = 'y'
 
@@ -20,7 +20,8 @@ while keep_going == 'y':
         cc = can_checkout(remaining)
         if cc is False:
             print("You can't checkout")
-            remaining = remaining + score
+            while remaining == 1:
+                remaining = remaining + score
         print(str(remaining) + ' Remaining')
     print('You have checked out! If you want to play again please input "y".')
     keep_going = input()
