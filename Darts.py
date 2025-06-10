@@ -1,6 +1,3 @@
-###def make_player(name):
-   ## return name
-
 def can_checkout(rem):
     return bool((rem <= 170 and rem not in (169, 168, 166, 165, 163, 162, 159)) or rem > 180)
 
@@ -12,15 +9,13 @@ keep_going = 'y'
 print('Welcome to Daniels dart game!')
 
 num_players = int(input("How many players are playing? "))
-current_player = 0
 game_players = []
 for x in range(num_players):
     player_name = input('Player ' + str(x + 1) + ' name? ')
     game_players.append(player_name)
 
-for x in game_players:
+for x in game_players: #Used to see if I can call back the player name currently, no real use of the functionality. 
     print('Hello ' + str(x))
-
 
 while keep_going == 'y': #Begins the game loop
     print('What game would you like to play?')
