@@ -1,5 +1,5 @@
-def make_player(name):
-    return {'name': name}
+###def make_player(name):
+   ## return name
 
 def can_checkout(rem):
     return bool((rem <= 170 and rem not in (169, 168, 166, 165, 163, 162, 159)) or rem > 180)
@@ -16,7 +16,11 @@ current_player = 0
 game_players = []
 for x in range(num_players):
     player_name = input('Player ' + str(x + 1) + ' name? ')
-    game_players.append(make_player(player_name))
+    game_players.append(player_name)
+
+for x in game_players:
+    print('Hello ' + str(x))
+
 
 while keep_going == 'y': #Begins the game loop
     print('What game would you like to play?')
