@@ -15,7 +15,7 @@ num_players = int(input("How many players are playing? "))
 current_player = 0
 game_players = []
 for x in range(num_players):
-    player_name = input('Player ' + str(current_player + 1) + ' name? ')
+    player_name = input('Player ' + str(x + 1) + ' name? ')
     game_players.append(make_player(player_name))
 
 while keep_going == 'y': #Begins the game loop
