@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Game Page</title>
+</head>
+<body>
+    <h1>Let's play darts!</h1>
+    <p>Player: {{ playername }}</p>
+    <p> {{ info }}</p>
+    <p> {{ checkoutinfo }}</p>
+    <h2>Enter your next score</h2>
+    <form action="/gamestart" method="POST">
+        <input type="number" name="new_score" step="any" min="0" max ="180" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p>Do you want to start again?
+    <a href="http://127.0.0.1:5000/input">
+  
+  <button>Start</button>
+    </a> </p>
+</body>
+</html>
