@@ -4,16 +4,28 @@
     <title>Number Input</title>
 </head>
 <body>
-    <h1>This is the game setup.</h1>
-    <br>
-    <p1>Please input the starting score.</p1>
+    <h1>
+        This is the game setup.
+    </h1> <br>
+
+    <p1>
+        Please input the starting score.
+    </p1>
 
     <form action="/playerdetails" method="POST">
 
-        <input type="number" name="starting_score" step="any" required>  <br>  <br>
+    <input type="number" name="starting_score" step="any" required>  <br>  <br>
    
-    <h2>What is your name?</h2>
-        <input type="text" name="playername" step="any" required>
+    <p2>
+        How many people are playing?
+    </p2> <br>
+        <input type="number" name="numplayers" step="any" required> <br> <br>
+
+    <p3>
+        What is your name?
+    </p3> <br>
+        <input type="text" name="playername" step="any" required> <br> <br>
+
         <button type="submit">Submit</button>
     </form>
 </body>
