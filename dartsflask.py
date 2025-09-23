@@ -28,27 +28,26 @@ def playerdetails():
     for player in range(0, int(session["numplayers"])):
 
             playerstring = playerstring + '<h2>Enter player ' + str(player + 1) + ' name </h2> ' + \
-                    '<input type="text" name="new_score" step="any" required> <br><br>' 
+                    '<input type="text" name="playernames[]" step="any" required> <br><br>' 
                     
                     
     return '<!DOCTYPE html> \
                 <html> \
                 <head> \
-                <title>Game Page</title> \
+                <title>Player Details</title> \
                 </head> \
                 <body> \
-                <h1>Lets play darts!</h1> \
-                <p>Player: ' +  request.form["numplayers"]+ '</p>' + \
-                    '<h2>Enter your next score</h2> ' + \
-                    '<form action="/gamestart" method="POST">' + \
-                    '<p> ' + playerstring + '</p>' + \
-                    '<button type="submit">Submit</button>' + \
-                    '</form>' + \
-                         \
-                    '<p>Do you want to start again? ' + \
-                    '<a href="http://127.0.0.1:5000/input">' + \
+                <h1> Setting up Players </h1> \
+                \
+                <form action="/gamestart" method="POST"> \
+                <p> ' + playerstring + '</p> \
+                <button type="submit">Submit</button> \
+                </form> \
                  \
-                '<button>Start</button> \
+                <p>Do you want to start again? \
+                <a href="http://127.0.0.1:5000/input"> \
+                 \
+                <button>Start</button> \
                     </a> </p> \
                 </body> \
                 </html>'
