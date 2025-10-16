@@ -1,15 +1,18 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for 
+import pickle
+
+class Players:
+    def __init__(player, name, score, sequence, status):
+        player.name = name
+        player.score = score
+        player.sequence = sequence
+        player.status = status
 
 app = Flask(__name__)
 app.secret_key = "dev"  
 
 def can_checkout(rem):
     return bool((rem <= 170 and rem not in (169, 168, 166, 165, 163, 162, 159)))
-
-class Players:
-    def __init__(player, name, score):
-        player.name = name
-        player.score = score
 
 @app.route('/')
 def index():
@@ -26,7 +29,6 @@ def playerdetails():
     playerstring = ""
 
     for player in range(0, int(session["numplayers"])):
-
             playerstring = playerstring + '<h2>Enter player ' + str(player + 1) + ' name </h2> ' + \
                     '<input type="text" name="playernames[]" step="any" required> <br><br>' 
                     
@@ -39,7 +41,7 @@ def playerdetails():
                 <body> \
                 <h1> Setting up Players </h1> \
                 \
-                <form action="/gamestart" method="POST"> \
+                <form action="/test" method="POST"> \
                 <p> ' + playerstring + '</p> \
                 <button type="submit">Submit</button> \
                 </form> \
@@ -51,7 +53,61 @@ def playerdetails():
                     </a> </p> \
                 </body> \
                 </html>'
-    #return redirect(url_for('gamestart'))
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+    playernames = request.form.getlist("playernames[]")
+    storedplayers = []
+    sequence = 1
+    status = True
+    for x in playernames:
+        play = Players(str(x), session["remaining"], sequence, status)
+        storedplayers.append(play)
+        sequence += 1
+        status = False
+    
+
+#### GET the next screen to whoever first player is blergh and enter score 
+
+    #for x in storedplayers: 
+    #    names += str(x.name) + " "
+    #    scores += str(x.score) + " "
+
+    playerturn = storedplayers[0]
+    playername = playerturn.name
+    playerscore = playerturn.score
+    #idea is to move the current player to the back of the list
+    storedplayers.append(storedplayers.pop(0))
+
+    session["storedplayers"] = pickle.dumps(storedplayers)
+
+    return '<!DOCTYPE html> \
+            <html> \
+            <head> \
+            <title>Game Screen</title> \
+            </head> \
+            <body> \
+            <h1> Player Names Shown </h1> \
+            \
+            <p> ' + playername + '</p> \
+            \
+            <p> ' + str(playerscore) + '</p> \
+            \
+            <p> What is your score? </p> \
+            <form action="/test" method="POST"> \
+            \
+            <input type="number" name="newscore" step="any" required>\
+            \
+            <button type="submit">Submit</button> \
+            </form> \
+            <p>Do you want to start again? \
+            <a href="http://127.0.0.1:5000/input"> \
+            \
+            <button>Start</button> \
+                </a> </p> \
+            </body> \
+            </html>'
+
 
 @app.route('/gamestart', methods=['GET', 'POST'])
 def gamestart():
