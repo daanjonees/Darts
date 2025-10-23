@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session, redirect, url_for 
+from collections import deque
 import pickle
 
 class Players:
@@ -41,7 +42,7 @@ def playerdetails():
                 <body> \
                 <h1> Setting up Players </h1> \
                 \
-                <form action="/test" method="POST"> \
+                <form action="/loop" method="POST"> \
                 <p> ' + playerstring + '</p> \
                 <button type="submit">Submit</button> \
                 </form> \
@@ -54,32 +55,71 @@ def playerdetails():
                 </body> \
                 </html>'
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
+@app.route('/loop', methods=['GET', 'POST'])
+def loop(): 
     playernames = request.form.getlist("playernames[]")
-    storedplayers = []
-    sequence = 1
-    status = True
-    for x in playernames:
-        play = Players(str(x), session["remaining"], sequence, status)
-        storedplayers.append(play)
-        sequence += 1
-        status = False
+    if playernames != []:
+        storedplayers = []
+        sequence = 1
+        status = True
+        for x in playernames:
+            play = Players(str(x), session["remaining"], sequence, status)
+            storedplayers.append(play)
+            sequence += 1
+            status = False
+        playername = storedplayers[0].name
+        playerscore = storedplayers[0].score
+        session["storedplayers"] = pickle.dumps(storedplayers)
+    
+    else:
+        storedplayers = pickle.loads(session["storedplayers"])
+        alterstoredplayers = deque(storedplayers)
+        alterstoredplayers.rotate(-1)
+        storedplayers = list(alterstoredplayers)
+        playername = storedplayers[0].name
+        playerscore = storedplayers[0].score
+        session["storedplayers"] = pickle.dumps(storedplayers)
+
+    #storedplayers = pickle.loads(session["storedplayers"])
+
+    #if newscore != "":
+    #    newscore = int(request.form["new_score"])
+
+    #    if newscore - playerscore == 1:
+    #        playerscore = playerscore
+    #        session["storedplayers"] = pickle.dumps(storedplayers)
+            
+    #    if playerscore > newscore:
+    #        playerscore -= newscore
+    #        session["storedplayers"] = pickle.dumps(storedplayers)
+
+    #    if newscore > playerscore:
+    #        playerscore = playerscore
+    #        session["storedplayers"] = pickle.dumps(storedplayers)
+
+    #    if newscore == playerscore:
+    #        #unsure what to do here? Redirect to start?
+    #        session["storedplayers"] = pickle.dumps(storedplayers)
+
+#if I add it outside do I need to pickle things inside the if statement? Or re-pickle.
+#When is the best place to load in newscore? If I add it at the start will it error before the if loop.
     
 
-#### GET the next screen to whoever first player is blergh and enter score 
+##Write down each player and see how it works. 
+    #has_changed = False
 
-    #for x in storedplayers: 
-    #    names += str(x.name) + " "
-    #    scores += str(x.score) + " "
+    #for x in storedplayers:
+    #    if has_changed == True and x.status == False:
+    #        x.status = True
+    #        has_changed = False
+    #    if x.status == True:
+     #       playername = x.name
+    #        playerscore = x.score
+     #       x.status = False
+     #       has_changed = True
 
-    playerturn = storedplayers[0]
-    playername = playerturn.name
-    playerscore = playerturn.score
-    #idea is to move the current player to the back of the list
-    storedplayers.append(storedplayers.pop(0))
+##What happens when you get to the last player
 
-    session["storedplayers"] = pickle.dumps(storedplayers)
 
     return '<!DOCTYPE html> \
             <html> \
@@ -87,14 +127,15 @@ def test():
             <title>Game Screen</title> \
             </head> \
             <body> \
-            <h1> Player Names Shown </h1> \
+            <h1> Game Loop </h1> \
             \
             <p> ' + playername + '</p> \
             \
             <p> ' + str(playerscore) + '</p> \
+            <p> ' + str(storedplayers) + '</p> \
             \
             <p> What is your score? </p> \
-            <form action="/test" method="POST"> \
+            <form action="/loop" method="POST"> \
             \
             <input type="number" name="newscore" step="any" required>\
             \
