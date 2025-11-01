@@ -3,11 +3,9 @@ from collections import deque
 import pickle
 
 class Players:
-    def __init__(player, name, score, sequence, status):
+    def __init__(player, name, score):
         player.name = name
         player.score = score
-        player.sequence = sequence
-        player.status = status
 
 app = Flask(__name__)
 app.secret_key = "dev"  
@@ -60,13 +58,9 @@ def loop():
     playernames = request.form.getlist("playernames[]")
     if playernames != []:
         storedplayers = []
-        sequence = 1
-        status = True
         for x in playernames:
-            play = Players(str(x), session["remaining"], sequence, status)
+            play = Players(str(x), session["remaining"])
             storedplayers.append(play)
-            sequence += 1
-            status = False
         playername = storedplayers[0].name
         playerscore = storedplayers[0].score
         session["storedplayers"] = pickle.dumps(storedplayers)
@@ -77,29 +71,26 @@ def loop():
         alterstoredplayers.rotate(-1)
         storedplayers = list(alterstoredplayers)
         playername = storedplayers[0].name
-        playerscore = storedplayers[0].score
-        session["storedplayers"] = pickle.dumps(storedplayers)
+        playerscore = storedplayers[0].score 
 
-    #storedplayers = pickle.loads(session["storedplayers"])
+        #if newscore != "":
+        newscore = int(request.form["newscore"])
 
-    #if newscore != "":
-    #    newscore = int(request.form["new_score"])
-
-    #    if newscore - playerscore == 1:
-    #        playerscore = playerscore
-    #        session["storedplayers"] = pickle.dumps(storedplayers)
+        if newscore - playerscore == 1:
+            playerscore = playerscore
+            session["storedplayers"] = pickle.dumps(storedplayers)
             
-    #    if playerscore > newscore:
-    #        playerscore -= newscore
-    #        session["storedplayers"] = pickle.dumps(storedplayers)
+        if playerscore > newscore:
+            playerscore -= newscore
+            session["storedplayers"] = pickle.dumps(storedplayers)
 
-    #    if newscore > playerscore:
-    #        playerscore = playerscore
-    #        session["storedplayers"] = pickle.dumps(storedplayers)
+        if newscore > playerscore:
+            playerscore = playerscore
+            session["storedplayers"] = pickle.dumps(storedplayers)
 
-    #    if newscore == playerscore:
-    #        #unsure what to do here? Redirect to start?
-    #        session["storedplayers"] = pickle.dumps(storedplayers)
+        if newscore == playerscore:
+            #unsure what to do here? Redirect to start?
+            session["storedplayers"] = pickle.dumps(storedplayers)
 
 #if I add it outside do I need to pickle things inside the if statement? Or re-pickle.
 #When is the best place to load in newscore? If I add it at the start will it error before the if loop.
