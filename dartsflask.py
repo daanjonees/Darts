@@ -67,49 +67,50 @@ def loop():
     
     else:
         storedplayers = pickle.loads(session["storedplayers"])
-        alterstoredplayers = deque(storedplayers)
-        alterstoredplayers.rotate(-1)
-        storedplayers = list(alterstoredplayers)
-        playername = storedplayers[0].name
+        #alterstoredplayers = deque(storedplayers)
+        #alterstoredplayers.rotate(-1)
+        #storedplayers = list(alterstoredplayers)
+        #playername = storedplayers[0].name
         playerscore = storedplayers[0].score 
 
         #if newscore != "":
         newscore = int(request.form["newscore"])
 
-        if newscore - playerscore == 1:
-            playerscore = playerscore
+        if playerscore - newscore == 1:
+            #playerscore = playerscore
+            storedplayers[0].score = playerscore
             session["storedplayers"] = pickle.dumps(storedplayers)
             
+        #Should I pass playerscore > newscore inside the above if statement as an elif?
+        
         if playerscore > newscore:
             playerscore -= newscore
+            storedplayers[0].score = playerscore 
             session["storedplayers"] = pickle.dumps(storedplayers)
 
         if newscore > playerscore:
             playerscore = playerscore
+            storedplayers[0].score = playerscore
             session["storedplayers"] = pickle.dumps(storedplayers)
 
         if newscore == playerscore:
             #unsure what to do here? Redirect to start?
             session["storedplayers"] = pickle.dumps(storedplayers)
 
-#if I add it outside do I need to pickle things inside the if statement? Or re-pickle.
-#When is the best place to load in newscore? If I add it at the start will it error before the if loop.
-    
+        storedplayers = pickle.loads(session["storedplayers"])
+        alterstoredplayers = deque(storedplayers)
+        alterstoredplayers.rotate(-1)
+        storedplayers = list(alterstoredplayers)
+        playername = storedplayers[0].name
+        playerscore = storedplayers[0].score
 
-##Write down each player and see how it works. 
-    #has_changed = False
+        #alterstoredplayers = deque(storedplayers)
+        #alterstoredplayers.rotate(-1)
+        #storedplayers = list(alterstoredplayers)
+        session["storedplayers"] = pickle.dumps(storedplayers)
 
-    #for x in storedplayers:
-    #    if has_changed == True and x.status == False:
-    #        x.status = True
-    #        has_changed = False
-    #    if x.status == True:
-     #       playername = x.name
-    #        playerscore = x.score
-     #       x.status = False
-     #       has_changed = True
 
-##What happens when you get to the last player
+#Looks like players and their scores are now in the correct cycle, although the if statement doesn't work at returning the previous player nu,ber if == 1.
 
 
     return '<!DOCTYPE html> \
@@ -123,12 +124,11 @@ def loop():
             <p> ' + playername + '</p> \
             \
             <p> ' + str(playerscore) + '</p> \
-            <p> ' + str(storedplayers) + '</p> \
             \
             <p> What is your score? </p> \
             <form action="/loop" method="POST"> \
             \
-            <input type="number" name="newscore" step="any" required>\
+            <input type="number" name="newscore" step="any" min="0" max="180" required>\
             \
             <button type="submit">Submit</button> \
             </form> \
